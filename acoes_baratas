@@ -1,0 +1,40 @@
+pip install yfinance
+
+import yfinance as yf
+
+def obter_informacoes_acao(ticker):
+    try:
+        # Obtém as informações da ação no Yahoo Finanças
+        acao = yf.Ticker(ticker)
+        
+        # Extrai o preço atual e o lucro por ação
+        preco_atual = acao.info['last_price']
+        lucro_por_acao = acao.info['trailingEps']
+        
+        return preco_atual, lucro_por_acao
+    except Exception as e:
+        print(f"Erro ao obter informações da ação {ticker}: {e}")
+        return None, None
+
+def avaliar_acao(ticker):
+    preco_atual, lucro_por_acao = obter_informacoes_acao(ticker)
+    
+    if preco_atual is not None and lucro_por_acao is not None:
+        # Calcula o índice P/E
+        pe_ratio = preco_atual / lucro_por_acao
+        
+        # Define um limite para considerar a ação como "barata"
+        limite_pe = 15
+        
+        # Avalia se a ação está barata com base no P/E
+        if pe_ratio < limite_pe:
+            return f"A ação {ticker} parece estar barata."
+        else:
+            return f"A ação {ticker} pode não estar tão barata."
+    else:
+        return f"Não foi possível avaliar a ação {ticker}."
+
+# Exemplo de uso
+ticker = PETR3  # Substitua pelo ticker da ação desejada
+resultado = avaliar_acao(ticker)
+print(resultado)
